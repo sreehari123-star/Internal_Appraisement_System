@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Feedback</title>
+</head>
+<body>
+    <h1>Admin Feedback</h1>
+    {% if feedback_list %}
+        <ul>
+            {% for feedback in feedback_list %}
+                <li>
+                    <strong>Teacher Name:</strong> {{ feedback.teacher_name }}<br>
+                    <strong>Feedback:</strong> {{ feedback.message}}<br>
+<strong>Timestamp:</strong> {{ feedback.timestamp }}<br>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No feedback available.</p>
+{% endif %}
+</body>
+</html>

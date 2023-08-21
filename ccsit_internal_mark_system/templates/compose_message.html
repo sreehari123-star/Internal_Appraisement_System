@@ -1,0 +1,8 @@
+<!-- compose_message.html -->
+
+  <h1>Compose Message</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send</button>
+  </form>

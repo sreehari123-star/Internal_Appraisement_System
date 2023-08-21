@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marks Viewer</title>
+    <style>
+        .fixed-top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 999;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .fixed-top-navbar.shadow {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-size:cover;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            margin: 0 auto;
+            animation: fade-in 1s ease;
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background: linear-gradient(to right, orange, gold);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            animation: slide-in 1s ease;
+        }
+
+        @keyframes slide-in {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            color:black;
+            font-weight:bold;
+            font-size:16px;
+        }
+
+        th {
+            background: linear-gradient(orange, gold);
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+<header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light fixed-top-navbar">
+<!--                    <nav class="navbar navbar-expand-lg navbar-light">-->
+                        <a class="navbar-brand" href="index.html"> <img src="{% static 'img/ucity_logo.jpg' %}" alt="logo" height="95em" width="95em" style="margin-left:8em;"> </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse main-menu-item justify-content-center"
+                            id="navbarSupportedContent" style="margin-left:50em;">
+                            <ul class="navbar-nav align-items-center">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{% url 'student_home' %}"><b>Home</b></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'about' %}"><b>About</b></a>
+                                </li>
+                                 <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'course' %}"><b>Courses</b></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+<br><br><br><br><br>
+    <h1>Marks Viewer</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+<!--            <label for="username">Username:</label>-->
+<!--            <input type="text" id="username" name="username" required>-->
+        </div>
+        <div class="form-group">
+            <label for="semester">Semester:</label>
+            <input type="text" id="semester" name="semester" required>
+        </div>
+        <button type="submit">View Marks</button>
+    </form>
+<br><br>
+    <div>
+        {% if error_message %}
+        <h2>{{error_message}}</h2>
+        {% elif marks %}
+            <h2>Marks for Username: {{ request.session.username }} - Semester: {{ semester }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Subject</th>
+                        <th>Attendance</th>
+                        <th>Assignment</th>
+                        <th>Seminar</th>
+                        <th>Test 1</th>
+                        <th>Test 2</th>
+                        <th>Total Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mark in marks %}
+                        {% if forloop.first %}
+                            <tr>
+                                <td rowspan="{{ marks|length }}">{{ mark.student.username }}</td>
+                                <td>{{ mark.subject.name }}</td>
+                                <td>{{ mark.attendance }}</td>
+                                <td>{{ mark.assignment }}</td>
+                                <td>{{ mark.seminar }}</td>
+                                <td>{{ mark.test1 }}</td>
+                                <td>{{ mark.test2 }}</td>
+                                <td>{{ mark.total_marks }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ mark.subject.name }}</td>
+                                <td>{{ mark.attendance }}</td>
+                                <td>{{ mark.assignment }}</td>
+                                <td>{{ mark.seminar }}</td>
+                                <td>{{ mark.test1 }}</td>
+                                <td>{{ mark.test2 }}</td>
+                                <td>{{ mark.total_marks }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+      </div>
+</body>
+</html>
+{% endblock %}

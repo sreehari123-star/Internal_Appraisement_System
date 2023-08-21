@@ -1,0 +1,429 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subject Student List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: center;
+            border: 1px solid #ddd;
+            padding:10px;
+        }
+
+        th {
+            background: linear-gradient( orange, gold);
+            color:white;
+            font-weight:bold;
+            font-size:16px;
+            padding:12px;
+        }
+
+        /* Styles for the form */
+<!--        form {-->
+<!--            padding: 20px;-->
+<!--            margin-top: 30px;-->
+<!--            max-width: 600px;-->
+<!--            margin: 0 auto;-->
+<!--            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);-->
+<!--            border-radius: 5px;-->
+<!--            background-color: #fff;-->
+<!--        }-->
+
+        input[type="number"],
+        input[type="text"] {
+            width: 50%;
+            margin-top:1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: gold;
+            box-shadow: 0 0 8px gold;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient( orange, gold);
+            color: white;
+            font-weight:bold;
+            font-size:15px;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 5px;
+            width:50%;
+            font-size:16px;
+
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(yellow, gold);
+            transform: scale(1.1); /* Add a scaling effect on hover */
+        }
+
+        /* Animation for the table rows */
+        tr {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s forwards;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animation for the "Update" button */
+        td a {
+            display: inline-block;
+            padding: 5px 10px;
+            width:90%;
+            background: linear-gradient( orange, gold);
+            color: black;
+            text-decoration: none;
+            border-radius: 3px;
+            height:2.5em;
+            transition: background-color 0.3s;
+        }
+
+        td a:hover {
+            background: linear-gradient(to right, orange, gold);
+            color: white;
+            transform: scale(1.1); /* Add a scaling effect on hover */
+        }
+
+        /* Success message animation */
+        .success {
+            color: green;
+            font-weight: bold;
+            animation: success 0.5s forwards;
+        }
+
+        @keyframes success {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Animation for the table appearance */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .animated-table {
+            animation: slideInRight 1s forwards;
+        }
+
+        /* Disable input fields for rows with success class */
+        .success input[type="number"] {
+            pointer-events: none;
+            background: linear-gradient(yellow, gold);
+            border-color: #ccc;
+            color:black;
+            font-weight:bold;
+            font-size:16px;
+        }
+
+
+
+        /* Add a new class for the animated tick mark */
+.tick-animation {
+  display: inline-block;
+  font-size: 18px;
+  color: green;
+  font-weight: bold;
+  transform-origin: center;
+  animation: spin-and-fade 1s linear;
+}
+
+/* Define the animation keyframes */
+@keyframes spin-and-fade {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            background-color: #f2f2f2;-->
+<!--            margin: 0;-->
+<!--            padding: 20px;-->
+<!--            margin:20px;-->
+<!--        }-->
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .list {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        li:hover {
+            transform: scale(1.02);
+            background-color: #f7f7f7;
+        }
+        strong {
+            color: #333;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+        <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CCSIT</title>
+    <link rel="icon" href="{% static 'img/ucity_logo.jpg' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <!-- themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!--::header part start::-->
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light fixed-top-navbar">
+<!--                    <nav class="navbar navbar-expand-lg navbar-light">-->
+                        <a class="navbar-brand" href="index.html"> <img src="{% static 'img/ucity_logo.jpg' %}" alt="logo" height="95em" width="95em"> </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse main-menu-item justify-content-end"
+                            id="navbarSupportedContent">
+                            <ul class="navbar-nav align-items-center">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{% url 'admin_home' %}">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'course' %}">Courses</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+<br><br><br><br><br><br><br><br><br><br>
+ <h1>Teacher Replies</h1>
+    {% if feedback_list %}
+        <ul>
+            {% for feedback in feedback_list %}
+                <li class="list">
+                    <strong>Teacher Name:</strong> {{ feedback.teacher_name }}<br>
+                    <strong>Feedback:</strong> {{ feedback.message }}<br>
+                    <strong>Timestamp:</strong> {{ feedback.timestamp }}<br>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No feedback available.</p>
+    {% endif %}
+
+     <br><br><br><br><br>
+     <br><br><br><br><br>
+
+        <footer class="footer-area">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-sm-6 col-md-4 col-xl-3">
+                    <div class="single-footer-widget footer_1">
+                        <a href="index.html"> <img src="{% static 'img/ucity_logo.jpg' %}" height="95px" width="95px" alt=""> </a>
+                        <p>CCSIT stands for Center for Computer Science and Information Technology
+                        providing the technical education for the students in computer science and IT.
+                        It is an organization of University of Calicut.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-xl-4">
+                    <div class="single-footer-widget footer_2">
+                        <h4>Internal System</h4>
+                        <p>Stay updated with the internals provided by the
+                            center.
+                            To know more enter your email id.
+                        </p>
+                        <form action="#">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder='Enter email address'
+                                        onfocus="this.placeholder = ''"
+                                        onblur="this.placeholder = 'Enter email address'">
+                                    <div class="input-group-append">
+                                        <button class="btn btn_1" type="button"><i class="ti-angle-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="social_icon">
+                            <a href="#"> <i class="ti-facebook"></i> </a>
+                            <a href="#"> <i class="ti-twitter-alt"></i> </a>
+                            <a href="#"> <i class="ti-instagram"></i> </a>
+                            <a href="#"> <i class="ti-skype"></i> </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-4">
+                    <div class="single-footer-widget footer_2">
+                        <h4>Contact us</h4>
+                        <div class="contact_info">
+                            <p><span> Address :</span> CCSIT CU Campus </p>
+                            <p><span> Phone :</span> 0000 112233</p>
+                            <p><span> Email : </span>ccsit@cucampus.com </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="copyright_part_text text-center">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p class="footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | CCSIT CU Campus
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer part end-->
+
+    <!-- jquery plugins here-->
+    <!-- jquery -->
+    <script src="{% static 'js/jquery-1.12.1.min.js' %}"></script>
+    <!-- popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- easing js -->
+    <script src="{% static 'js/jquery.magnific-popup.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/swiper.min.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/masonry.pkgd.js' %}"></script>
+    <!-- particles js -->
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'js/waypoints.min.js' %}"></script>
+    <!-- custom js -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script>
+        // Calculate and update the total marks for each student
+        function calculateTotalMarks() {
+            const rows = document.querySelectorAll('tbody tr:not(.success)');
+            rows.forEach(row => {
+                const attendance = parseInt(row.querySelector('input[name^="attendance"]').value) || 0;
+                const assignment = parseInt(row.querySelector('input[name^="assignment"]').value) || 0;
+                const seminar = parseInt(row.querySelector('input[name^="seminar"]').value) || 0;
+                const test1 = parseInt(row.querySelector('input[name^="test1"]').value) || 0;
+                const test2 = parseInt(row.querySelector('input[name^="test2"]').value) || 0;
+
+                // Validate the maximum marks for each field
+                if (attendance > 5 || assignment > 5 || seminar > 10 || test1 > 15 || test2 > 15) {
+                    alert('Maximum marks exceeded.');
+                    row.querySelector('.total-marks').textContent = ''; // Clear the total marks
+                    return; // Exit the function
+                }
+
+                const totalMarks = attendance + assignment + seminar + test1 + test2;
+
+                if (totalMarks > 50) {
+                    alert('Total marks cannot exceed 50.');
+                    row.querySelector('.total-marks').textContent = ''; // Clear the total marks
+                } else {
+                    row.querySelector('.total-marks').textContent = totalMarks;
+                }
+            });
+        }
+
+        // Update the total marks when marks are changed
+        const inputFields = document.querySelectorAll('input:not([disabled])');
+        inputFields.forEach(input => {
+            input.addEventListener('input', calculateTotalMarks);
+        });
+
+        // Calculate total marks on page load
+        calculateTotalMarks();
+    </script>
+</body>
+</html>
+
